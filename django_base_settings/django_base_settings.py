@@ -1,7 +1,16 @@
 import sys
 
-from pydantic import BaseModel
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel as _BaseModel
+from pydantic import ConfigDict
+from pydantic_settings import BaseSettings as _BaseSettings
+
+
+class BaseModel(_BaseModel):
+    model_config = ConfigDict(alias_generator=lambda field_name: field_name.upper())
+
+
+class BaseSettings(_BaseSettings):
+    model_config = ConfigDict(alias_generator=lambda field_name: field_name.upper())
 
 
 class DjangoBaseSettings(BaseSettings):
@@ -47,9 +56,9 @@ class DjangoBaseSettings(BaseSettings):
             if isinstance(field_value, (BaseSettings, BaseModel)):
                 setattr(
                     module,
-                    field_name.upper(),
+                    field_name,
                     field_value.model_dump(by_alias=True),
                 )
             else:
                 # For regular fields, inject the value directly
-                setattr(module, field_name.upper(), field_value)
+                setattr(module, field_name, field_value)
