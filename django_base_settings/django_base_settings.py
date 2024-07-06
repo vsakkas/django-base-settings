@@ -1,5 +1,6 @@
 import sys
 
+from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
 
@@ -35,10 +36,20 @@ class DjangoBaseSettings(BaseSettings):
 
     def __init__(self) -> None:
         super().__init__()
-
         # Get the module where this instance was created
         module = sys.modules[self.__class__.__module__]
-
         # Inject validated fields as module-level variables
-        for field_name, field_value in self.model_dump().items():
-            setattr(module, field_name.upper(), field_value)
+        self._inject_settings(module, self)
+
+    def _inject_settings(self, module, settings: BaseSettings) -> None:
+        for field_name, field_value in settings.model_dump(by_alias=True).items():
+            # For nested models, inject a dictionary representation
+            if isinstance(field_value, (BaseSettings, BaseModel)):
+                setattr(
+                    module,
+                    field_name.upper(),
+                    field_value.model_dump(by_alias=True),
+                )
+            else:
+                # For regular fields, inject the value directly
+                setattr(module, field_name.upper(), field_value)
