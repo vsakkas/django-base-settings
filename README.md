@@ -1,6 +1,6 @@
 # Django Base Settings
 
-[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.2.0)
+[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.3.0)
 [![Python](https://img.shields.io/badge/python-3.10+-187f58.svg)](https://www.python.org/downloads/)
 [![Django Version](https://img.shields.io/badge/django-5.0+-187f58)](https://www.djangoproject.com/)
 [![MIT License](https://img.shields.io/badge/license-MIT-187f58)](https://github.com/vsakkas/django-base-settings/blob/master/LICENSE)
@@ -47,14 +47,11 @@ DEFAULT_FROM_EMAIL = "webmaster@example.com"
 For more complex configurations, you can define nested settings using Pydantic models:
 
 ```python
-from pydantic import Field
-from pydantic_settings import BaseSettings
-
-from django_base_settings import DjangoBaseSettings
+from django_base_settings import BaseSettings, DjangoBaseSettings
 
 class CacheSettings(BaseSettings):
-    backend: str = Field("django.core.cache.backends.redis.RedisCache", alias="BACKEND")
-    location: str = Field("redis://127.0.0.1:6379/1", alias="LOCATION")
+    backend: str = "django.core.cache.backends.redis.RedisCache"
+    location: str = "redis://127.0.0.1:6379/1"
 
 class MySiteSettings(DjangoBaseSettings):
     caches: dict[str, CacheSettings] = {"default": CacheSettings()}
