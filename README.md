@@ -47,14 +47,11 @@ DEFAULT_FROM_EMAIL = "webmaster@example.com"
 For more complex configurations, you can define nested settings using Pydantic models:
 
 ```python
-from pydantic import Field
-from pydantic_settings import BaseSettings
-
-from django_base_settings import DjangoBaseSettings
+from django_base_settings import BaseSettings, DjangoBaseSettings
 
 class CacheSettings(BaseSettings):
-    backend: str = Field("django.core.cache.backends.redis.RedisCache", alias="BACKEND")
-    location: str = Field("redis://127.0.0.1:6379/1", alias="LOCATION")
+    backend: str = "django.core.cache.backends.redis.RedisCache"
+    location: str = "redis://127.0.0.1:6379/1"
 
 class MySiteSettings(DjangoBaseSettings):
     caches: dict[str, CacheSettings] = {"default": CacheSettings()}
