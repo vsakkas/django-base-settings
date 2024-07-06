@@ -1,5 +1,6 @@
 # Django Base Settings
 
+[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.2.0)
 [![Python](https://img.shields.io/badge/python-3.10+-187f58.svg)](https://www.python.org/downloads/)
 ![Django Version](https://img.shields.io/badge/django-5.0+-187f58)
 [![MIT License](https://img.shields.io/badge/license-MIT-187f58)](https://github.com/vsakkas/django-base-settings/blob/master/LICENSE)
@@ -56,9 +57,7 @@ class CacheSettings(BaseSettings):
     location: str = Field("redis://127.0.0.1:6379/1", alias="LOCATION")
 
 class MySiteSettings(DjangoBaseSettings):
-    caches: dict[str, CacheSettings] = {
-        "default": CacheSettings()
-    }
+    caches: dict[str, CacheSettings] = {"default": CacheSettings()}
 
 my_site_settings = MySiteSettings()
 ```
