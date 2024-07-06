@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-base-settings"
-version = "0.1.0"
+version = "1.0.0"
 description = "Use Pydantic to enhance your Django application settings."
 authors = ["vsakkas <vasileios.sakkas96@gmail.com>"]
 license = "MIT"
@@ -10,6 +10,7 @@ packages = [{ include = "django_base_settings" }]
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = "^2.8.2"
+pydantic-settings = "^2.3.4"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.1"
