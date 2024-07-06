@@ -3,6 +3,7 @@ import sys
 from pydantic import BaseModel as _BaseModel
 from pydantic import ConfigDict
 from pydantic_settings import BaseSettings as _BaseSettings
+from pydantic_settings import SettingsConfigDict
 
 
 class BaseModel(_BaseModel):
@@ -10,7 +11,9 @@ class BaseModel(_BaseModel):
 
 
 class BaseSettings(_BaseSettings):
-    model_config = ConfigDict(alias_generator=lambda field_name: field_name.upper())
+    model_config = SettingsConfigDict(
+        alias_generator=lambda field_name: field_name.upper()
+    )
 
 
 class DjangoBaseSettings(BaseSettings):
@@ -53,7 +56,9 @@ class DjangoBaseSettings(BaseSettings):
     def _inject_settings(self, module, settings: BaseSettings) -> None:
         for field_name, field_value in settings.model_dump(by_alias=True).items():
             # For nested models, inject a dictionary representation
-            if isinstance(field_value, (BaseSettings, BaseModel)):
+            if isinstance(
+                field_value, (BaseSettings, BaseModel, _BaseSettings, _BaseModel)
+            ):
                 setattr(
                     module,
                     field_name,
