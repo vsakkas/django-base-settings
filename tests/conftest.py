@@ -21,10 +21,10 @@ class NestedSettings(DjangoBaseSettings):
 
 
 @pytest.fixture
-def simple_settings():
+def simple_settings() -> SimpleSettings:
     return SimpleSettings()
 
 
 @pytest.fixture
-def nested_settings():
+def nested_settings() -> NestedSettings:
     return NestedSettings()

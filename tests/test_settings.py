@@ -1,5 +1,3 @@
-# tests/test_settings.py
-
 import pytest
 from pydantic import ValidationError
 
@@ -7,7 +5,7 @@ from tests.conftest import NestedSettings, SimpleSettings
 
 
 def test_simple_settings(simple_settings: SimpleSettings) -> None:
-    assert simple_settings.allowed_hosts == ["www.example.com"]  # type: ignore # noqa: F821
+    assert simple_settings.allowed_hosts == ["www.example.com"]
     assert simple_settings.debug is False
     assert simple_settings.default_from_email == "webmaster@example.com"
 
