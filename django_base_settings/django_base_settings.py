@@ -7,12 +7,14 @@ from pydantic_settings import SettingsConfigDict
 
 
 class BaseModel(_BaseModel):
-    model_config = ConfigDict(alias_generator=lambda field_name: field_name.upper())
+    model_config = ConfigDict(
+        alias_generator=lambda field_name: field_name.upper(), frozen=True
+    )
 
 
 class BaseSettings(_BaseSettings):
     model_config = SettingsConfigDict(
-        alias_generator=lambda field_name: field_name.upper()
+        alias_generator=lambda field_name: field_name.upper(), frozen=True
     )
 
 
