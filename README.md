@@ -1,6 +1,6 @@
 # Django Base Settings
 
-[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.4.0)
+[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.4.1)
 [![Python](https://img.shields.io/badge/python-3.10+-187f58.svg)](https://www.python.org/downloads/)
 [![Django Version](https://img.shields.io/badge/django-5.0+-187f58)](https://www.djangoproject.com/)
 [![MIT License](https://img.shields.io/badge/license-MIT-187f58)](https://github.com/vsakkas/django-base-settings/blob/master/LICENSE)
@@ -70,6 +70,9 @@ CACHES = {
 }
 ```
 
+> [!TIP]
+> Import `BaseSettings` and `BaseModel` from `django_base_settings` for your nested configuration objects instead of `pydantic` and `pydantic_settings`. These provide additional useful features such as automatic conversion of lowercase field names to uppercase when creating the Django application settings.
+
 ### Environment Variables
 
 Fields contained within DjangoBaseSettings and BaseSettings objects can be assigned values or have their default overwritten through environment variables, providing flexibility for different deployment environments.
@@ -85,7 +88,7 @@ class MySiteSettings(DjangoBaseSettings):
 my_site_settings = MySiteSettings()
 ```
 
-You can configure the value of default_from_email by creating an environment variable, which will overwrite the default value:
+Setting `DEFAULT_FROM_EMAIL` as an environment variable will override the default value of `default_from_email`:
 
 ```bash
 export DEFAULT_FROM_EMAIL="admin@example.com"
@@ -104,7 +107,15 @@ class MySiteSettings(DjangoBaseSettings):
 my_site_settings = MySiteSettings()
 ```
 
-In this example, setting `DEFAULT_EMAIL` as an environment variable will override the default value of `default_from_email`.
+In this example, setting `DEFAULT_EMAIL` as an environment variable will override the default value of `default_from_email`:
+
+```bash
+export DEFAULT_EMAIL="admin@example.com"
+```
+
+### Altering Settings
+
+Django does not recommend altering the application settings during runtime. Because of this, all fields defined using `DjangoBaseSettings` are frozen and cannot be altered after initilization.
 
 ## License
 
