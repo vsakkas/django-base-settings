@@ -37,3 +37,6 @@ jobs:
 
     - name: Run type checker
       run: poetry run mypy --ignore-missing-imports django_base_settings/
+
+    - name: Run tests
+      run: poetry run pytest
