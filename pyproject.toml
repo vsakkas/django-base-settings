@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-base-settings"
-version = "0.4.1"
+version = "0.5.0"
 description = "Use Pydantic to enhance your Django application settings."
 authors = ["vsakkas <vasileios.sakkas96@gmail.com>"]
 license = "MIT"

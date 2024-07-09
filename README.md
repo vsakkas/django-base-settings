@@ -1,6 +1,6 @@
 # Django Base Settings
 
-[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.4.1)
+[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.5.0)
 [![Python](https://img.shields.io/badge/python-3.10+-187f58.svg)](https://www.python.org/downloads/)
 [![Django Version](https://img.shields.io/badge/django-5.0+-187f58)](https://www.djangoproject.com/)
 [![MIT License](https://img.shields.io/badge/license-MIT-187f58)](https://github.com/vsakkas/django-base-settings/blob/master/LICENSE)
@@ -112,6 +112,30 @@ In this example, setting `DEFAULT_EMAIL` as an environment variable will overrid
 ```bash
 export DEFAULT_EMAIL="admin@example.com"
 ```
+
+### Pydantic Fields
+
+You can use fields from `pydantic` to further enhance your settings and improve the validation of the configuration. For example, for configuring the `CacheSettings`, you can define the `location` as `RedisDsn` instead of `str`:
+
+```python
+from pydantic import RedisDsn
+
+from django_base_settings import BaseSettings, DjangoBaseSettings
+
+class CacheSettings(BaseSettings):
+    backend: str = "django.core.cache.backends.redis.RedisCache"
+    location: RedisDsn = "redis://127.0.0.1:6379/1"
+
+class MySiteSettings(DjangoBaseSettings):
+    caches: dict[str, CacheSettings] = {"default": CacheSettings()}
+
+my_site_settings = MySiteSettings()
+```
+
+The above code will validate the value of `location`.
+
+> [!TIP]
+> For more detailed information on DSN types, visit the [pydantic](https://docs.pydantic.dev/latest/api/networks/#pydantic.networks) documentation.
 
 ### Altering Settings
 
