@@ -1,0 +1,44 @@
+name: Build and Publish
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+ 
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run linter
+      run: poetry run ruff check django_base_settings/
+
+    - name: Run type checker
+      run: poetry run mypy --ignore-missing-imports django_base_settings/
+
+    - name: Run tests
+      run: poetry run pytest
+    
+    - name: Build package
+      run: poetry build
+    
+    - name: Publish to PyPI
+      env:
+        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        poetry config pypi-token.pypi $PYPI_PASSWORD
+        poetry publish
