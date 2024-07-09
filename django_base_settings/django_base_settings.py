@@ -29,6 +29,7 @@ class BaseSettings(_BaseSettings):
     def serialize_url(self, value: Any, _) -> Any | str:
         if isinstance(value, Url):
             return str(value)
+        return value
 
 
 class DjangoBaseSettings(BaseSettings):
