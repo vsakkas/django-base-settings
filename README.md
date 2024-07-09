@@ -70,12 +70,12 @@ CACHES = {
 }
 ```
 
-> [!TIP]
-> Import `BaseSettings` and `BaseModel` from `django_base_settings` for your nested configuration objects instead of `pydantic` and `pydantic_settings`. These provide additional useful features such as automatic conversion of lowercase field names to uppercase when creating the Django application settings.
+> [!NOTE]
+> Import `BaseModel`/`BaseSettings` from `django_base_settings` for your nested configuration objects instead of `pydantic`/`pydantic_settings`. These provide additional features, which are necessary to generate a valid Django configuration.
 
 ### Environment Variables
 
-Fields contained within DjangoBaseSettings and BaseSettings objects can be assigned values or have their default overwritten through environment variables, providing flexibility for different deployment environments.
+Fields contained within `DjangoBaseSettings` and `BaseSettings` objects can be a assigned value or have their default value overwritten through environment variables, providing flexibility for different deployment environments.
 
 In this example:
 
@@ -115,7 +115,7 @@ export DEFAULT_EMAIL="admin@example.com"
 
 ### Pydantic Fields
 
-You can use fields from `pydantic` to further enhance your settings and improve the validation of the configuration. For example, for configuring the `CacheSettings`, you can define the `location` as `RedisDsn` instead of `str`:
+You can use fields from Pydantic to further enhance your settings and improve the validation of the configuration. For example, for setting up `CacheSettings`, you can define the `location` as `RedisDsn` instead of `str`:
 
 ```python
 from pydantic import RedisDsn
@@ -132,14 +132,14 @@ class MySiteSettings(DjangoBaseSettings):
 my_site_settings = MySiteSettings()
 ```
 
-The above code will validate the value of `location`.
+The above code ensures the`location` field adheres to the `RedisDsn` format, providing an extra layer of validation on your settings.
 
 > [!TIP]
-> For more detailed information on DSN types, visit the [pydantic](https://docs.pydantic.dev/latest/api/networks/#pydantic.networks) documentation.
+> For more detailed information on DSN types and their usage, refer to the [pydantic](https://docs.pydantic.dev/latest/api/networks/#pydantic.networks) documentation on network types.
 
 ### Altering Settings
 
-Django does not recommend altering the application settings during runtime. Because of this, all fields defined using `DjangoBaseSettings` are frozen and cannot be altered after initilization.
+Django does not recommend altering the application settings during runtime. To align with this best practice, all fields defined using DjangoBaseSettings are immutable and cannot be modified after initialization.
 
 ## License
 
