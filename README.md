@@ -1,6 +1,6 @@
 # Django Base Settings
 
-[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.4.1)
+[![Latest Release](https://img.shields.io/github/v/release/vsakkas/django-base-settings.svg?color=187f58)](https://github.com/vsakkas/django-base-settings/releases/tag/v0.5.0)
 [![Python](https://img.shields.io/badge/python-3.10+-187f58.svg)](https://www.python.org/downloads/)
 [![Django Version](https://img.shields.io/badge/django-5.0+-187f58)](https://www.djangoproject.com/)
 [![MIT License](https://img.shields.io/badge/license-MIT-187f58)](https://github.com/vsakkas/django-base-settings/blob/master/LICENSE)
@@ -70,12 +70,12 @@ CACHES = {
 }
 ```
 
-> [!TIP]
-> Import `BaseSettings` and `BaseModel` from `django_base_settings` for your nested configuration objects instead of `pydantic` and `pydantic_settings`. These provide additional useful features such as automatic conversion of lowercase field names to uppercase when creating the Django application settings.
+> [!NOTE]
+> Import `BaseModel`/`BaseSettings` from `django_base_settings` for your nested configuration objects instead of `pydantic`/`pydantic_settings`. These provide additional features, which are necessary to generate a valid Django configuration.
 
 ### Environment Variables
 
-Fields contained within DjangoBaseSettings and BaseSettings objects can be assigned values or have their default overwritten through environment variables, providing flexibility for different deployment environments.
+Fields contained within `DjangoBaseSettings` and `BaseSettings` objects can be a assigned value or have their default value overwritten through environment variables, providing flexibility for different deployment environments.
 
 In this example:
 
@@ -113,9 +113,33 @@ In this example, setting `DEFAULT_EMAIL` as an environment variable will overrid
 export DEFAULT_EMAIL="admin@example.com"
 ```
 
+### Pydantic Fields
+
+You can use fields from Pydantic to further enhance your settings and improve the validation of the configuration. For example, for setting up `CacheSettings`, you can define the `location` as `RedisDsn` instead of `str`:
+
+```python
+from pydantic import RedisDsn
+
+from django_base_settings import BaseSettings, DjangoBaseSettings
+
+class CacheSettings(BaseSettings):
+    backend: str = "django.core.cache.backends.redis.RedisCache"
+    location: RedisDsn = "redis://127.0.0.1:6379/1"
+
+class MySiteSettings(DjangoBaseSettings):
+    caches: dict[str, CacheSettings] = {"default": CacheSettings()}
+
+my_site_settings = MySiteSettings()
+```
+
+The above code ensures the`location` field adheres to the `RedisDsn` format, providing an extra layer of validation on your settings.
+
+> [!TIP]
+> For more detailed information on DSN types and their usage, refer to the [pydantic](https://docs.pydantic.dev/latest/api/networks/#pydantic.networks) documentation on network types.
+
 ### Altering Settings
 
-Django does not recommend altering the application settings during runtime. Because of this, all fields defined using `DjangoBaseSettings` are frozen and cannot be altered after initilization.
+Django does not recommend altering the application settings during runtime. To align with this best practice, all fields defined using DjangoBaseSettings are immutable and cannot be modified after initialization.
 
 ## License
 

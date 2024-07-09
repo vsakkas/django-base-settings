@@ -1,7 +1,9 @@
 import sys
+from typing import Any
 
 from pydantic import BaseModel as _BaseModel
-from pydantic import ConfigDict
+from pydantic import ConfigDict, field_serializer
+from pydantic_core import Url
 from pydantic_settings import BaseSettings as _BaseSettings
 from pydantic_settings import SettingsConfigDict
 
@@ -11,11 +13,23 @@ class BaseModel(_BaseModel):
         alias_generator=lambda field_name: field_name.upper(), frozen=True
     )
 
+    @field_serializer("*", when_used="always")
+    def serialize_url(self, value: Any, _) -> Any | str:
+        if isinstance(value, Url):
+            return str(value)
+        return value
+
 
 class BaseSettings(_BaseSettings):
     model_config = SettingsConfigDict(
         alias_generator=lambda field_name: field_name.upper(), frozen=True
     )
+
+    @field_serializer("*", when_used="always")
+    def serialize_url(self, value: Any, _) -> Any | str:
+        if isinstance(value, Url):
+            return str(value)
+        return value
 
 
 class DjangoBaseSettings(BaseSettings):
